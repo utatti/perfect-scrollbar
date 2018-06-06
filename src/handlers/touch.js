@@ -41,10 +41,23 @@ export default function(i) {
   }
 
   function applyTouchMove(differenceX, differenceY) {
-    element.scrollTop -= differenceY;
-    element.scrollLeft -= differenceX;
+    let scale = calcContentScale(element);
+
+    element.scrollTop -= differenceY / scale.y;
+    element.scrollLeft -= differenceX / scale.x;
 
     updateGeometry(i);
+  }
+
+  function calcContentScale(element) {
+    let originSize = element.getBoundingClientRect(),
+      x = originSize.width / element.offsetWidth || 1,
+      y = originSize.height / element.offsetHeight || 1;
+
+    return {
+      x,
+      y,
+    };
   }
 
   let startOffset = {};
