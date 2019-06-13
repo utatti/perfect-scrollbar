@@ -7,9 +7,19 @@ export default function(i) {
   const element = i.element;
   const roundedScrollTop = Math.floor(element.scrollTop);
 
+  var scrollWidth = element.scrollWidth;
+  var clientWidth = element.clientWidth;
+  var boundingClientWidth = element.getBoundingClientRect().width;
+  var isOverflowing =
+    scrollWidth > clientWidth && boundingClientWidth === clientWidth;
+  var difference = scrollWidth - clientWidth;
+
   i.containerWidth = element.clientWidth;
   i.containerHeight = element.clientHeight;
-  i.contentWidth = element.scrollWidth;
+  i.contentWidth =
+    isOverflowing && difference === 1
+      ? boundingClientWidth
+      : element.scrollWidth;
   i.contentHeight = element.scrollHeight;
 
   if (!element.contains(i.scrollbarXRail)) {
