@@ -158,7 +158,19 @@ export default class PerfectScrollbar {
     this.lastScrollTop = Math.floor(element.scrollTop); // for onScroll only
     this.lastScrollLeft = element.scrollLeft; // for onScroll only
     this.event.bind(this.element, 'scroll', e => this.onScroll(e));
+    this.updateOwnGeometry();
+  }
+
+  updateOwnGeometry() {
+    if (this.currentAFReqId) this.currentAFReqId = null;
     updateGeometry(this);
+  }
+
+  updateOwnGeometryOnAnimFrame() {
+    if (this.currentAFReqId) cancelAnimationFrame(this.currentAFReqId);
+    this.currentAFReqId = requestAnimationFrame(
+      this.updateOwnGeometry.bind(this)
+    );
   }
 
   update() {
@@ -185,7 +197,7 @@ export default class PerfectScrollbar {
     CSS.set(this.scrollbarXRail, { display: 'none' });
     CSS.set(this.scrollbarYRail, { display: 'none' });
 
-    updateGeometry(this);
+    this.updateOwnGeometry();
 
     processScrollDiff(this, 'top', 0, false, true);
     processScrollDiff(this, 'left', 0, false, true);
@@ -199,7 +211,7 @@ export default class PerfectScrollbar {
       return;
     }
 
-    updateGeometry(this);
+    this.updateOwnGeometryOnAnimFrame();
     processScrollDiff(this, 'top', this.element.scrollTop - this.lastScrollTop);
     processScrollDiff(
       this,

@@ -3,6 +3,8 @@ import * as DOM from './lib/dom';
 import cls from './lib/class-names';
 import { toInt } from './lib/util';
 
+let requestAnimationFrame = window.requestAnimationFrame || (cb => cb());
+
 export default function(i) {
   const element = i.element;
   const roundedScrollTop = Math.floor(element.scrollTop);
